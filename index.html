@@ -109,6 +109,100 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 
 <section id="rulesQuiz" style="background:#111827;color:#f9fafb;padding:20px;border-radius:16px;margin:24px 0;font-family:Arial,sans-serif;">
   <h2 style="margin-top:0;">🥋 Rules Challenge</h2>
+  
+<div id="rules-quiz" style="background:#171717;color:white;padding:18px;border-radius:14px;margin:16px 0;">
+  <h3>🥋 Test Your BJJ Rules Knowledge</h3>
+  <p>Choose a ruleset and test yourself!</p>
+  <label for="ruleset">Choose ruleset:</label>
+  <select id="ruleset" style="padding:10px;margin:8px;">
+    <option value="ibjjf">IBJJF</option>
+    <option value="adcc">ADCC</option>
+  </select>
+  <p id="rq-question"></p>
+  <div id="rq-options"></div>
+  <p id="rq-feedback" aria-live="polite"></p>
+  <p id="rq-score">Question 1 of 3</p>
+  <button type="button" id="rq-next">Start Quiz</button>
+</div>
+<script>
+(function () {
+  const questions = {
+    ibjjf: [
+      {q:"In IBJJF point scoring, how many points is a guard pass worth?",a:["2","3","4"],c:1,e:"A guard pass is worth 3 points."},
+      {q:"How many points is a mount position worth?",a:["2","3","4"],c:2,e:"Mount is worth 4 points."},
+      {q:"How many points is a sweep worth?",a:["2","3","4"],c:0,e:"A sweep is worth 2 points."}
+    ],
+    adcc: [
+      {q:"In ADCC rules, are points generally scored during the opening no-points period?",a:["Yes","No"],c:1,e:"The opening period is generally a no-points period; penalties and submission rules still apply."},
+      {q:"What can win an ADCC match immediately?",a:["A submission","A guard pass only","A takedown only"],c:0,e:"A submission can end the match immediately."},
+      {q:"Can match rules vary by division and event?",a:["Yes","No"],c:0,e:"Always check the current rules for your division and event."}
+    ]
+  };
+  let index=0, score=0, started=false, answered=false;
+  const set = document.getElementById("ruleset");
+  const question = document.getElementById("rq-question");
+  const options = document.getElementById("rq-options");
+  const feedback = document.getElementById("rq-feedback");
+  const scoreText = document.getElementById("rq-score");
+  const next = document.getElementById("rq-next");
+  function render() {
+    const list = questions[set.value];
+    answered=false;
+    feedback.textContent="";
+    options.innerHTML="";
+    if(index>=list.length){
+      question.textContent="Quiz complete! Your score: "+score+" / "+list.length;
+      scoreText.textContent="Great work! Check the current official rules before competing.";
+      next.textContent="Try Again";
+      started=false;
+      return;
+    }
+    question.textContent=(index+1)+". "+list[index].q;
+    scoreText.textContent="Question "+(index+1)+" of "+list.length+" · Score: "+score;
+    list[index].a.forEach(function(answer,i){
+      const button=document.createElement("button");
+      button.type="button";
+      button.textContent=answer;
+      button.style="display:block;margin:8px 0;padding:10px;width:100%;text-align:left;cursor:pointer;";
+      button.addEventListener("click",function(){
+        if(answered)return;
+        answered=true;
+        if(i===list[index].c){
+          score++;
+          feedback.textContent="✅ Correct! "+list[index].e;
+        }else{
+          feedback.textContent="Not quite. "+list[index].e;
+        }
+        scoreText.textContent="Question "+(index+1)+" of "+list.length+" · Score: "+score;
+        next.textContent=index===list.length-1?"See Results":"Next Question";
+      });
+      options.appendChild(button);
+    });
+    next.textContent="Start Quiz";
+  }
+  next.addEventListener("click",function(){
+    if(!started){
+      index=0;score=0;started=true;render();
+      next.textContent="Next Question";
+      return;
+    }
+    if(index<questions[set.value].length && !answered)return;
+    index++;
+    render();
+  });
+  set.addEventListener("change",function(){
+    index=0;score=0;started=false;
+    question.textContent="Ready to test your "+set.options[set.selectedIndex].text+" knowledge?";
+    options.innerHTML="";
+    feedback.textContent="";
+    scoreText.textContent="Question 1 of 3";
+    next.textContent="Start Quiz";
+  });
+  question.textContent="Ready to test your IBJJF knowledge?";
+  next.textContent="Start Quiz";
+})();
+</script>
+
   <p>Test your grappling rules knowledge.</p>
   <label for="rulesMode">Choose a ruleset:</label>
   <select id="rulesMode" style="display:block;width:100%;padding:12px;margin:10px 0 18px;border-radius:8px;">
