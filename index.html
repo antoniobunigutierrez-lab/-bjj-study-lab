@@ -109,209 +109,102 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 <section id="athletes"><div class="section-title"><h2>People to study</h2></div><div class="grid" id="athleteGrid"></div></section>
 <section id="systems"><div class="section-title"><h2>Study systems</h2></div><div class="grid" id="systemGrid"></div></section>
 
-<section id="rulesQuiz" style="background:#111827;color:#f9fafb;padding:20px;border-radius:16px;margin:24px 0;font-family:Arial,sans-serif;">
-  <h2 style="margin-top:0;">🥋 Rules Challenge</h2>
-  
-<div id="rules-quiz" style="background:#171717;color:white;padding:18px;border-radius:14px;margin:16px 0;">
-  <h3>🥋 Test Your BJJ Rules Knowledge</h3>
-  <p>Choose a ruleset and test yourself!</p>
-  <label for="ruleset">Choose ruleset:</label>
-  <select id="ruleset" style="padding:10px;margin:8px;">
+<section id="rulesQuiz" style="background:#111827;color:#f9fafb;padding:22px;border-radius:16px;margin:24px 0;font-family:Arial,sans-serif;">
+  <h2 style="margin-top:0;">🥋 IBJJF &amp; ADCC Rules Quiz</h2>
+  <p>Choose a ruleset, answer the questions, and see your score. This is a study aid; check the current official rules for your division and event.</p>
+  <label for="bjj-rules-mode">Ruleset:</label>
+  <select id="bjj-rules-mode" style="padding:10px;margin:8px;background:#fff;color:#111;border-radius:8px;">
     <option value="ibjjf">IBJJF</option>
     <option value="adcc">ADCC</option>
   </select>
-  <p id="rq-question"></p>
-  <div id="rq-options"></div>
-  <p id="rq-feedback" aria-live="polite"></p>
-  <p id="rq-score">Question 1 of 3</p>
-  <button type="button" id="rq-next">Start Quiz</button>
-</div>
-<script>
-(function () {
-  const questions = {
-    ibjjf: [
-      {q:"In IBJJF point scoring, how many points is a guard pass worth?",a:["2","3","4"],c:1,e:"A guard pass is worth 3 points."},
-      {q:"How many points is a mount position worth?",a:["2","3","4"],c:2,e:"Mount is worth 4 points."},
-      {q:"How many points is a sweep worth?",a:["2","3","4"],c:0,e:"A sweep is worth 2 points."}
-    ],
-    adcc: [
-      {q:"In ADCC rules, are points generally scored during the opening no-points period?",a:["Yes","No"],c:1,e:"The opening period is generally a no-points period; penalties and submission rules still apply."},
-      {q:"What can win an ADCC match immediately?",a:["A submission","A guard pass only","A takedown only"],c:0,e:"A submission can end the match immediately."},
-      {q:"Can match rules vary by division and event?",a:["Yes","No"],c:0,e:"Always check the current rules for your division and event."}
-    ]
-  };
-  let index=0, score=0, started=false, answered=false;
-  const set = document.getElementById("ruleset");
-  const question = document.getElementById("rq-question");
-  const options = document.getElementById("rq-options");
-  const feedback = document.getElementById("rq-feedback");
-  const scoreText = document.getElementById("rq-score");
-  const next = document.getElementById("rq-next");
-  function render() {
-    const list = questions[set.value];
-    answered=false;
-    feedback.textContent="";
-    options.innerHTML="";
-    if(index>=list.length){
-      question.textContent="Quiz complete! Your score: "+score+" / "+list.length;
-      scoreText.textContent="Great work! Check the current official rules before competing.";
-      next.textContent="Try Again";
-      started=false;
-      return;
-    }
-    question.textContent=(index+1)+". "+list[index].q;
-    scoreText.textContent="Question "+(index+1)+" of "+list.length+" · Score: "+score;
-    list[index].a.forEach(function(answer,i){
-      const button=document.createElement("button");
-      button.type="button";
-      button.textContent=answer;
-      button.style="display:block;margin:8px 0;padding:10px;width:100%;text-align:left;cursor:pointer;";
-      button.addEventListener("click",function(){
-        if(answered)return;
-        answered=true;
-        if(i===list[index].c){
-          score++;
-          feedback.textContent="✅ Correct! "+list[index].e;
-        }else{
-          feedback.textContent="Not quite. "+list[index].e;
-        }
-        scoreText.textContent="Question "+(index+1)+" of "+list.length+" · Score: "+score;
-        next.textContent=index===list.length-1?"See Results":"Next Question";
-      });
-      options.appendChild(button);
-    });
-    next.textContent="Start Quiz";
-  }
-  next.addEventListener("click",function(){
-    if(!started){
-      index=0;score=0;started=true;render();
-      next.textContent="Next Question";
-      return;
-    }
-    if(index<questions[set.value].length && !answered)return;
-    index++;
-    render();
-  });
-  set.addEventListener("change",function(){
-    index=0;score=0;started=false;
-    question.textContent="Ready to test your "+set.options[set.selectedIndex].text+" knowledge?";
-    options.innerHTML="";
-    feedback.textContent="";
-    scoreText.textContent="Question 1 of 3";
-    next.textContent="Start Quiz";
-  });
-  question.textContent="Ready to test your IBJJF knowledge?";
-  next.textContent="Start Quiz";
-})();
-</script>
-
-  <p>Test your grappling rules knowledge.</p>
-  <label for="rulesMode">Choose a ruleset:</label>
-  <select id="rulesMode" style="display:block;width:100%;padding:12px;margin:10px 0 18px;border-radius:8px;">
-    <option value="ibjjf">IBJJF — Adult Gi basics</option>
-    <option value="adcc">ADCC — Rules basics</option>
-  </select>
-  <div id="rulesQuestion" style="font-size:18px;font-weight:bold;margin-bottom:14px;">Ready to test yourself?</div>
-  <div id="rulesAnswers"></div>
-  <p id="rulesFeedback" aria-live="polite"></p>
-  <p id="rulesScore">Question 1 of 5</p>
-  <button id="rulesNext" type="button" style="padding:12px 18px;border:0;border-radius:8px;background:#22c55e;color:#052e16;font-weight:bold;" disabled>Next question</button>
-  <button id="rulesRestart" type="button" style="padding:12px 18px;border:0;border-radius:8px;margin-left:6px;">Restart</button>
-  <p style="font-size:12px;color:#cbd5e1;">Study tool only. Always check the current rules for your event and division.</p>
+  <div id="bjj-rules-card" style="background:#171717;padding:18px;border-radius:12px;margin-top:12px;">
+    <p id="bjj-rules-progress">Ready when you are.</p>
+    <h3 id="bjj-rules-question">Test your rules knowledge</h3>
+    <div id="bjj-rules-answers" style="display:grid;gap:9px;"></div>
+    <p id="bjj-rules-feedback" aria-live="polite"></p>
+    <p id="bjj-rules-score">Score: 0</p>
+    <button type="button" id="bjj-rules-start" style="padding:10px 16px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold;cursor:pointer;">Start Quiz</button>
+    <button type="button" id="bjj-rules-next" style="display:none;padding:10px 16px;border:0;border-radius:8px;background:#2bd7a4;color:#111;font-weight:bold;cursor:pointer;">Next Question</button>
+    <button type="button" id="bjj-rules-restart" style="padding:10px 16px;border:1px solid #777;border-radius:8px;background:transparent;color:white;cursor:pointer;">Restart</button>
+  </div>
 </section>
-
 <style>
-#rulesQuiz .rules-answer {
-  display:block;width:100%;text-align:left;padding:13px;margin:8px 0;
-  border:1px solid #64748b;border-radius:9px;background:#1f2937;
-  color:#fff;font-size:15px;
-}
-#rulesQuiz .rules-answer:disabled { opacity:1; }
-#rulesQuiz .rules-answer.correct { background:#14532d;border-color:#22c55e; }
-#rulesQuiz .rules-answer.wrong { background:#7f1d1d;border-color:#f87171; }
+#rulesQuiz .bjj-rules-answer{padding:11px;text-align:left;border:1px solid #555;border-radius:8px;background:#242424;color:white;cursor:pointer}
+#rulesQuiz .bjj-rules-answer:disabled{cursor:default;opacity:.95}
+#rulesQuiz .bjj-rules-answer.correct{border-color:#2bd7a4;background:#123b31}
+#rulesQuiz .bjj-rules-answer.wrong{border-color:#ff647c;background:#421e28}
 </style>
-
 <script>
-(function () {
-  const questions = {
+(function(){
+  const bank = {
     ibjjf: [
-      {q:"In standard adult IBJJF scoring, how many points is a guard pass worth?",a:["2 points","3 points","4 points"],c:1,e:"A guard pass is worth 3 points under standard IBJJF scoring."},
-      {q:"How many points is a sweep worth?",a:["2 points","3 points","4 points"],c:0,e:"A qualifying sweep is worth 2 points."},
-      {q:"How many points is a takedown worth?",a:["1 point","2 points","4 points"],c:1,e:"A qualifying takedown is worth 2 points."},
-      {q:"How many points is mount worth?",a:["2 points","3 points","4 points"],c:2,e:"Mount is worth 4 points under standard IBJJF scoring."},
-      {q:"How many points is back control worth?",a:["2 points","3 points","4 points"],c:2,e:"Qualifying back control is worth 4 points under standard IBJJF scoring."}
+      {q:"How many points is a guard pass worth under standard IBJJF point scoring?",a:["2 points","3 points","4 points"],c:1,e:"A guard pass is worth 3 points."},
+      {q:"How many points is a mount position worth?",a:["2 points","3 points","4 points"],c:2,e:"Mount is worth 4 points."},
+      {q:"How many points is a sweep worth?",a:["1 point","2 points","3 points"],c:1,e:"A sweep is worth 2 points."},
+      {q:"How many points is a takedown that establishes the required control worth?",a:["2 points","3 points","4 points"],c:0,e:"A qualifying takedown is worth 2 points."},
+      {q:"How many points is knee-on-belly worth?",a:["1 point","2 points","4 points"],c:1,e:"Knee-on-belly is worth 2 points."},
+      {q:"What is the usual point value for back control with the required hooks or qualifying control?",a:["2 points","3 points","4 points"],c:2,e:"Back control is worth 4 points when the scoring criteria are met."}
     ],
     adcc: [
-      {q:"When do points generally become active in a standard ADCC match?",a:["Only during overtime","After the opening no-points period","From the first second in every match"],c:1,e:"ADCC matches commonly have an opening no-points period. Check the event format and current rules."},
-      {q:"Which organization publishes the ADCC rules?",a:["IBJJF","ADCC","UFC"],c:1,e:"ADCC publishes its own rules. Do not assume they are identical to IBJJF rules."},
-      {q:"Are ADCC World Championship rules always identical to ADCC Open rules?",a:["Yes, in every division","No, event and division rules can differ","Only for beginners"],c:1,e:"ADCC Open events can have specific modifications and legal-technique restrictions."},
-      {q:"What should you check before competing in an ADCC event?",a:["Only your belt color","The current event rules and division","Only the match timer"],c:1,e:"Confirm the current rules, age group, skill division, and event format."},
-      {q:"Can you assume every submission technique is legal in every ADCC division?",a:["Yes","No, legality can depend on the division and event","Only in the finals"],c:1,e:"Allowed techniques can vary by age, division, and event. Review the official rules."}
+      {q:"In a standard ADCC match, are points generally scored during the opening no-points period?",a:["Yes","No"],c:1,e:"The opening period is generally a no-points period, though penalties and submissions still matter."},
+      {q:"What can end an ADCC match immediately?",a:["A submission","A guard pass only","A takedown only"],c:0,e:"A submission can end the match immediately."},
+      {q:"What can a referee issue for passivity?",a:["A passivity warning or penalty","Automatic 10 points","An automatic win"],c:0,e:"Passivity can lead to warnings and penalties under the event rules."},
+      {q:"Are ADCC scoring and IBJJF scoring identical?",a:["Yes, always","No, they use different rules"],c:1,e:"ADCC and IBJJF have different rules and scoring systems."},
+      {q:"Can the rules and scoring period differ by ADCC event or division?",a:["Yes","No, never"],c:0,e:"Always check the specific event and division rules."},
+      {q:"What should you do if you're unsure whether a technique is legal for your division?",a:["Check the current official rules","Assume every technique is legal","Use another division's rules"],c:0,e:"Legality can vary by event, age, experience, and division. Check the current official rules."}
     ]
   };
-  const mode = document.getElementById("rulesMode");
-  const question = document.getElementById("rulesQuestion");
-  const answers = document.getElementById("rulesAnswers");
-  const feedback = document.getElementById("rulesFeedback");
-  const scoreText = document.getElementById("rulesScore");
-  const next = document.getElementById("rulesNext");
-  const restart = document.getElementById("rulesRestart");
-  let index = 0, score = 0, answered = false;
-
-  function render() {
-    const list = questions[mode.value];
-    answered = false;
-    feedback.textContent = "";
-    next.disabled = true;
-    next.textContent = "Next question";
-    scoreText.textContent = "Question " + (index + 1) + " of " + list.length + " · Score: " + score;
-    question.textContent = list[index].q;
-    answers.innerHTML = "";
-    list[index].a.forEach(function (answer, i) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "rules-answer";
-      button.textContent = answer;
-      button.addEventListener("click", function () {
-        if (answered) return;
-        answered = true;
-        const item = list[index];
-        if (i === item.c) {
-          score++;
-          button.classList.add("correct");
-          feedback.textContent = "✅ Correct! " + item.e;
-        } else {
-          button.classList.add("wrong");
-          answers.children[item.c].classList.add("correct");
-          feedback.textContent = "❌ Not quite. " + item.e;
-        }
-        Array.from(answers.children).forEach(function (b) { b.disabled = true; });
-        scoreText.textContent = "Question " + (index + 1) + " of " + list.length + " · Score: " + score;
-        next.disabled = false;
-        if (index === list.length - 1) next.textContent = "See results";
+  const mode=document.getElementById("bjj-rules-mode");
+  const progress=document.getElementById("bjj-rules-progress");
+  const question=document.getElementById("bjj-rules-question");
+  const answers=document.getElementById("bjj-rules-answers");
+  const feedback=document.getElementById("bjj-rules-feedback");
+  const scoreText=document.getElementById("bjj-rules-score");
+  const start=document.getElementById("bjj-rules-start");
+  const next=document.getElementById("bjj-rules-next");
+  const restart=document.getElementById("bjj-rules-restart");
+  let index=0, score=0, active=false, answered=false, finished=false;
+  function render(){
+    const list=bank[mode.value];
+    answered=false; finished=false;
+    progress.textContent="Question "+(index+1)+" of "+list.length;
+    question.textContent=list[index].q;
+    answers.innerHTML=""; feedback.textContent="";
+    scoreText.textContent="Score: "+score;
+    start.style.display="none"; next.style.display="none";
+    list[index].a.forEach((label,i)=>{
+      const b=document.createElement("button");
+      b.type="button"; b.className="bjj-rules-answer"; b.textContent=label;
+      b.addEventListener("click",()=>{
+        if(answered||finished)return;
+        answered=true;
+        const item=list[index];
+        if(i===item.c){score++;b.classList.add("correct");feedback.textContent="Correct! "+item.e;}
+        else{b.classList.add("wrong");answers.children[item.c].classList.add("correct");feedback.textContent="Not quite. "+item.e;}
+        Array.from(answers.children).forEach(x=>x.disabled=true);
+        scoreText.textContent="Score: "+score;
+        next.textContent=index===list.length-1?"See Results":"Next Question";
+        next.style.display="inline-block";
       });
-      answers.appendChild(button);
+      answers.appendChild(b);
     });
   }
-
-  function reset() { index = 0; score = 0; render(); }
-  next.addEventListener("click", function () {
-    if (!answered) return;
-    if (index < questions[mode.value].length - 1) {
-      index++;
-      render();
-    } else {
-      question.textContent = "🏁 Quiz complete!";
-      answers.innerHTML = "";
-      feedback.textContent = "You scored " + score + " out of " + questions[mode.value].length + ". Keep studying!";
-      scoreText.textContent = "Final score: " + score + "/" + questions[mode.value].length;
-      next.disabled = true;
-      next.textContent = "Finished";
+  function begin(){index=0;score=0;active=true;render();}
+  start.addEventListener("click",begin);
+  next.addEventListener("click",()=>{
+    if(!answered)return;
+    const list=bank[mode.value];
+    if(index<list.length-1){index++;render();}
+    else{
+      finished=true;progress.textContent="Quiz complete!";
+      question.textContent="You scored "+score+" out of "+list.length;
+      answers.innerHTML="";feedback.textContent=score===list.length?"Perfect score! Great work.":"Nice practice—restart to try again.";
+      scoreText.textContent="Final score: "+score+"/"+list.length;
+      next.style.display="none";start.style.display="inline-block";start.textContent="Play Again";
     }
   });
-  restart.addEventListener("click", reset);
-  mode.addEventListener("change", reset);
-  render();
+  restart.addEventListener("click",()=>{start.textContent="Start Quiz";begin();});
+  mode.addEventListener("change",()=>{start.textContent="Start Quiz";index=0;score=0;active=false;answered=false;finished=false;progress.textContent="Ready when you are.";question.textContent="Test your rules knowledge";answers.innerHTML="";feedback.textContent="";scoreText.textContent="Score: 0";start.style.display="inline-block";next.style.display="none";});
 })();
 </script>
 
