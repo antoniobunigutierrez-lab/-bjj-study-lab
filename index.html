@@ -83,7 +83,9 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 </style>
 </head>
 <body>
-<header><div class="brand">BJJ <b>STUDY LAB</b></div><div class="nav"><button class="active" onclick="showSection('library',this)">Library</button><button onclick="showSection('athletes',this)">Athletes</button><button onclick="showSection('systems',this)">Systems</button></div></header>
+<header><div class="brand">BJJ <b>STUDY LAB</b></div><div class="nav"><button class="active" onclick="showSection('library',this)">Library</button><button onclick="showSection('athletes',this)">Athletes</button><button onclick="showSection('systems',this)">Systems</button>
+   <button type="button" onclick="document.getElementById('rules-quiz').scrollIntoView({behavior:'smooth'})">Rules Quiz</button>
+   </div></header>
 <div class="wrap">
 <section class="hero" id="library">
 <div class="eyebrow">The grappler's study desk</div>
