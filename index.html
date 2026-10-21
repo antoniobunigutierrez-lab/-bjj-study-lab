@@ -31,7 +31,7 @@ header{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:
 .panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}.panel.show{display:block}.panel h2{margin-top:0}.cols{display:grid;grid-template-columns:1fr 1fr;gap:25px}.steps{color:#c8d0dc;line-height:1.8}.watchlist a{display:block;color:#ddd7ff;text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}.watchlist a:hover{color:white}.note{color:var(--muted);font-size:13px;line-height:1.6}
 .empty{text-align:center;border:1px dashed var(--line);border-radius:16px;padding:35px;color:var(--muted);display:none}
 footer{padding:60px 0 35px;color:#687386;font-size:12px}
-@media(max-width:650px){.nav{display:none}.hero{padding-top:48px}.hero h1{letter-spacing:-3px}.search{flex-direction:column}.primary{height:52px}.cols{grid-template-columns:1fr}}
+@media(max-width:650px){header{padding:0 12px;gap:8px}.nav{display:flex;gap:3px;flex-wrap:nowrap}.nav button{font-size:11px;padding:7px 8px;white-space:nowrap}.hero{padding-top:48px}.hero h1{letter-spacing:-3px}.search{flex-direction:column}.primary{height:52px}.cols{grid-template-columns:1fr}}
 
 /* V5 APP REDESIGN */
 :root{--bg:#08090a;--panel:#101214;--panel2:#171a1e;--line:#292d32;--txt:#f5f2ea;--muted:#9b9a96;--accent:#ff6a2a;--accent2:#ffb36b;--green:#7ee2b8}
@@ -84,7 +84,7 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 </head>
 <body>
 <header><div class="brand">BJJ <b>STUDY LAB</b></div><div class="nav"><button class="active" onclick="showSection('library',this)">Library</button><button onclick="showSection('athletes',this)">Athletes</button><button onclick="showSection('systems',this)">Systems</button>
-   <button type="button" onclick="document.getElementById('rules-quiz').scrollIntoView({behavior:'smooth'})">Rules Quiz</button>
+   <button type="button" onclick="document.querySelector('section#rules-quiz').scrollIntoView({behavior:'smooth'})">Rules Quiz</button>
    </div></header>
 <div class="wrap">
 <section class="hero" id="library">
@@ -730,8 +730,8 @@ if ('serviceWorker' in navigator) {
       {
         q: "How many points is a qualifying knee-on-belly position worth?",
         a: ["1 point", "2 points", "3 points", "4 points"],
-        c: 0,
-        e: "A qualifying knee-on-belly position is worth 2 points? Check the current official rules before relying on this question."
+        c: 1,
+        e: "A qualifying knee-on-belly position is worth 2 points. Check the current official rules for your division."
       }
     ],
     adcc: [
