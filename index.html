@@ -106,6 +106,119 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 <section id="pathsSection"><div class="section-title"><h2>Beginner study paths</h2></div><p class="section-sub">Simple routes through the library when you are not sure what to study next.</p><div id="pathGrid" class="path-grid"></div></section>
 <section id="athletes"><div class="section-title"><h2>People to study</h2></div><div class="grid" id="athleteGrid"></div></section>
 <section id="systems"><div class="section-title"><h2>Study systems</h2></div><div class="grid" id="systemGrid"></div></section>
+
+<section id="rulesQuiz" style="background:#111827;color:#f9fafb;padding:20px;border-radius:16px;margin:24px 0;font-family:Arial,sans-serif;">
+  <h2 style="margin-top:0;">🥋 Rules Challenge</h2>
+  <p>Test your grappling rules knowledge.</p>
+  <label for="rulesMode">Choose a ruleset:</label>
+  <select id="rulesMode" style="display:block;width:100%;padding:12px;margin:10px 0 18px;border-radius:8px;">
+    <option value="ibjjf">IBJJF — Adult Gi basics</option>
+    <option value="adcc">ADCC — Rules basics</option>
+  </select>
+  <div id="rulesQuestion" style="font-size:18px;font-weight:bold;margin-bottom:14px;">Ready to test yourself?</div>
+  <div id="rulesAnswers"></div>
+  <p id="rulesFeedback" aria-live="polite"></p>
+  <p id="rulesScore">Question 1 of 5</p>
+  <button id="rulesNext" type="button" style="padding:12px 18px;border:0;border-radius:8px;background:#22c55e;color:#052e16;font-weight:bold;" disabled>Next question</button>
+  <button id="rulesRestart" type="button" style="padding:12px 18px;border:0;border-radius:8px;margin-left:6px;">Restart</button>
+  <p style="font-size:12px;color:#cbd5e1;">Study tool only. Always check the current rules for your event and division.</p>
+</section>
+
+<style>
+#rulesQuiz .rules-answer {
+  display:block;width:100%;text-align:left;padding:13px;margin:8px 0;
+  border:1px solid #64748b;border-radius:9px;background:#1f2937;
+  color:#fff;font-size:15px;
+}
+#rulesQuiz .rules-answer:disabled { opacity:1; }
+#rulesQuiz .rules-answer.correct { background:#14532d;border-color:#22c55e; }
+#rulesQuiz .rules-answer.wrong { background:#7f1d1d;border-color:#f87171; }
+</style>
+
+<script>
+(function () {
+  const questions = {
+    ibjjf: [
+      {q:"In standard adult IBJJF scoring, how many points is a guard pass worth?",a:["2 points","3 points","4 points"],c:1,e:"A guard pass is worth 3 points under standard IBJJF scoring."},
+      {q:"How many points is a sweep worth?",a:["2 points","3 points","4 points"],c:0,e:"A qualifying sweep is worth 2 points."},
+      {q:"How many points is a takedown worth?",a:["1 point","2 points","4 points"],c:1,e:"A qualifying takedown is worth 2 points."},
+      {q:"How many points is mount worth?",a:["2 points","3 points","4 points"],c:2,e:"Mount is worth 4 points under standard IBJJF scoring."},
+      {q:"How many points is back control worth?",a:["2 points","3 points","4 points"],c:2,e:"Qualifying back control is worth 4 points under standard IBJJF scoring."}
+    ],
+    adcc: [
+      {q:"When do points generally become active in a standard ADCC match?",a:["Only during overtime","After the opening no-points period","From the first second in every match"],c:1,e:"ADCC matches commonly have an opening no-points period. Check the event format and current rules."},
+      {q:"Which organization publishes the ADCC rules?",a:["IBJJF","ADCC","UFC"],c:1,e:"ADCC publishes its own rules. Do not assume they are identical to IBJJF rules."},
+      {q:"Are ADCC World Championship rules always identical to ADCC Open rules?",a:["Yes, in every division","No, event and division rules can differ","Only for beginners"],c:1,e:"ADCC Open events can have specific modifications and legal-technique restrictions."},
+      {q:"What should you check before competing in an ADCC event?",a:["Only your belt color","The current event rules and division","Only the match timer"],c:1,e:"Confirm the current rules, age group, skill division, and event format."},
+      {q:"Can you assume every submission technique is legal in every ADCC division?",a:["Yes","No, legality can depend on the division and event","Only in the finals"],c:1,e:"Allowed techniques can vary by age, division, and event. Review the official rules."}
+    ]
+  };
+  const mode = document.getElementById("rulesMode");
+  const question = document.getElementById("rulesQuestion");
+  const answers = document.getElementById("rulesAnswers");
+  const feedback = document.getElementById("rulesFeedback");
+  const scoreText = document.getElementById("rulesScore");
+  const next = document.getElementById("rulesNext");
+  const restart = document.getElementById("rulesRestart");
+  let index = 0, score = 0, answered = false;
+
+  function render() {
+    const list = questions[mode.value];
+    answered = false;
+    feedback.textContent = "";
+    next.disabled = true;
+    next.textContent = "Next question";
+    scoreText.textContent = "Question " + (index + 1) + " of " + list.length + " · Score: " + score;
+    question.textContent = list[index].q;
+    answers.innerHTML = "";
+    list[index].a.forEach(function (answer, i) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "rules-answer";
+      button.textContent = answer;
+      button.addEventListener("click", function () {
+        if (answered) return;
+        answered = true;
+        const item = list[index];
+        if (i === item.c) {
+          score++;
+          button.classList.add("correct");
+          feedback.textContent = "✅ Correct! " + item.e;
+        } else {
+          button.classList.add("wrong");
+          answers.children[item.c].classList.add("correct");
+          feedback.textContent = "❌ Not quite. " + item.e;
+        }
+        Array.from(answers.children).forEach(function (b) { b.disabled = true; });
+        scoreText.textContent = "Question " + (index + 1) + " of " + list.length + " · Score: " + score;
+        next.disabled = false;
+        if (index === list.length - 1) next.textContent = "See results";
+      });
+      answers.appendChild(button);
+    });
+  }
+
+  function reset() { index = 0; score = 0; render(); }
+  next.addEventListener("click", function () {
+    if (!answered) return;
+    if (index < questions[mode.value].length - 1) {
+      index++;
+      render();
+    } else {
+      question.textContent = "🏁 Quiz complete!";
+      answers.innerHTML = "";
+      feedback.textContent = "You scored " + score + " out of " + questions[mode.value].length + ". Keep studying!";
+      scoreText.textContent = "Final score: " + score + "/" + questions[mode.value].length;
+      next.disabled = true;
+      next.textContent = "Finished";
+    }
+  });
+  restart.addEventListener("click", reset);
+  mode.addEventListener("change", reset);
+  render();
+})();
+</script>
+
 <footer>Instructional buttons open BJJ Fanatics searches and match-study buttons open YouTube searches. Saved moves, notes, progress, study plans, search history, and feedback are stored locally on your device. Always follow your academy and event rules when studying submissions and leg locks.</footer>
 </div>
 
