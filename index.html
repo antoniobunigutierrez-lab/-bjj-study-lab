@@ -31,7 +31,7 @@ header{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:
 .panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}.panel.show{display:block}.panel h2{margin-top:0}.cols{display:grid;grid-template-columns:1fr 1fr;gap:25px}.steps{color:#c8d0dc;line-height:1.8}.watchlist a{display:block;color:#ddd7ff;text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}.watchlist a:hover{color:white}.note{color:var(--muted);font-size:13px;line-height:1.6}
 .empty{text-align:center;border:1px dashed var(--line);border-radius:16px;padding:35px;color:var(--muted);display:none}
 footer{padding:60px 0 35px;color:#687386;font-size:12px}
-@media(max-width:650px){header{padding:0 12px;gap:8px}.nav{display:flex;gap:3px;flex-wrap:nowrap}.nav button{font-size:11px;padding:7px 8px;white-space:nowrap}.hero{padding-top:48px}.hero h1{letter-spacing:-3px}.search{flex-direction:column}.primary{height:52px}.cols{grid-template-columns:1fr}}
+@media(max-width:650px){.nav{display:none}.hero{padding-top:48px}.hero h1{letter-spacing:-3px}.search{flex-direction:column}.primary{height:52px}.cols{grid-template-columns:1fr}}
 
 /* V5 APP REDESIGN */
 :root{--bg:#08090a;--panel:#101214;--panel2:#171a1e;--line:#292d32;--txt:#f5f2ea;--muted:#9b9a96;--accent:#ff6a2a;--accent2:#ffb36b;--green:#7ee2b8}
@@ -81,11 +81,15 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 @media(max-width:650px){.plan-controls{grid-template-columns:1fr}.plan-results{grid-template-columns:1fr}}
 
 </style>
+<style>
+#rulesLab{scroll-margin-top:90px;margin:55px 0;padding:25px;border:1px solid #323638;border-radius:22px;background:linear-gradient(135deg,#16191c,#101214)}
+.rules-controls{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.rules-controls select,.rules-controls button{background:#1c2025;color:#f8f5ee;border:1px solid #42474d;border-radius:12px;padding:12px 15px;font:inherit;cursor:pointer}.rules-controls button{background:#ff6a2a;border-color:#ff6a2a;color:#111;font-weight:900}
+.rules-option{display:block;width:100%;text-align:left;background:#1c2025;border:1px solid #353940;color:#f5f2ea;border-radius:13px;padding:16px;margin:9px 0;font:inherit;cursor:pointer}.rules-option:hover{border-color:#ff6a2a}.rules-option.correct{border-color:#7ee2b8;background:#15382e}.rules-option.wrong{border-color:#ff647c;background:#3b2027}.rules-explain{padding:15px;background:#22272a;border-radius:12px;margin-top:15px;line-height:1.55}.rules-muted{color:#a3a4a0;font-size:13px}#rulesQuestion{font-size:21px;font-weight:850;margin:20px 0}#rulesNext{margin-top:15px;display:none}#rulesLab .primary{padding:13px 22px;cursor:pointer}
+@media(max-width:650px){#rulesLab{padding:16px}.rules-controls select,.rules-controls button{flex:1}}
+</style>
 </head>
 <body>
-<header><div class="brand">BJJ <b>STUDY LAB</b></div><div class="nav"><button class="active" onclick="showSection('library',this)">Library</button><button onclick="showSection('athletes',this)">Athletes</button><button onclick="showSection('systems',this)">Systems</button>
-   <button type="button" onclick="document.getElementById('rulesQuiz').scrollIntoView({behavior:'smooth'})">Rules Quiz</button>
-   </div></header>
+<header><div class="brand">BJJ <b>STUDY LAB</b></div><div class="nav"><button class="active" onclick="showSection('library',this)">Library</button><button onclick="showSection('athletes',this)">Athletes</button><button onclick="showSection('systems',this)">Systems</button><button onclick="showSection('rulesLab',this)">Rules Lab</button></div></header>
 <div class="wrap">
 <section class="hero" id="library">
 <div class="eyebrow">The grappler's study desk</div>
@@ -93,7 +97,7 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 <p>Search a technique, tap the result, and get the full study breakdown in one place.</p>
 <div class="search-wrap"><div class="search"><input id="q" placeholder="Search: berimbolo, crab ride, heel hook, headquarters..." onkeydown="if(event.key==='Enter')search()"><button class="primary" onclick="search()">SEARCH</button></div><div id="searchPopup" class="search-popup" aria-live="polite"></div></div>
 <div class="quick" id="quick"></div><div class="filters"><select id="catFilter" onchange="applyFilters()"><option value="">All categories</option></select><select id="levelFilter" onchange="applyFilters()"><option value="">All levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select><select id="styleFilter" onchange="applyFilters()"><option value="">Gi + No-Gi</option><option>Gi</option><option>No-Gi</option></select><button class="reset" onclick="resetFilters()">Reset filters</button></div>
-<div class="tool-row"><button class="tool-btn primary-tool" onclick="randomTechnique()">🎲 Random technique</button><button class="tool-btn primary-tool" type="button" onclick="document.getElementById('rulesQuiz').scrollIntoView({behavior:'smooth',block:'start'})">🥋 Rules Quiz (IBJJF / ADCC)</button><button class="tool-btn" onclick="scrollToBlock('savedSection')">♥ Saved techniques</button><button class="tool-btn" onclick="scrollToBlock('pathsSection')">🗺 Beginner study paths</button><button class="tool-btn" onclick="requestTechnique()">＋ Request a technique</button><button class="tool-btn" onclick="scrollToBlock('planSection')">📅 My study plan</button><button class="tool-btn" onclick="scrollToBlock('historySection')">🔎 Search history</button></div>
+<div class="tool-row"><button class="tool-btn primary-tool" onclick="randomTechnique()">🎲 Random technique</button><button class="tool-btn" onclick="scrollToBlock('savedSection')">♥ Saved techniques</button><button class="tool-btn" onclick="scrollToBlock('pathsSection')">🗺 Beginner study paths</button><button class="tool-btn" onclick="requestTechnique()">＋ Request a technique</button><button class="tool-btn" onclick="scrollToBlock('planSection')">📅 My study plan</button><button class="tool-btn" onclick="scrollToBlock('historySection')">🔎 Search history</button></div>
 <div class="dashboard"><div class="dash-card" id="todCard"></div><div class="dash-card"><div class="dash-kicker">BUILD A STUDY HABIT</div><h3>Save moves and come back later</h3><p>Favorites and recently viewed techniques are stored on this device, so your study list stays easy to find.</p><div class="dash-actions"><button class="orange" onclick="scrollToBlock('savedSection')">View saved</button><button onclick="scrollToBlock('recentSection')">Recently viewed</button></div></div></div>
 </section>
 
@@ -108,106 +112,13 @@ header{height:68px;background:rgba(8,9,10,.86);border-bottom:1px solid #202327}
 <section id="pathsSection"><div class="section-title"><h2>Beginner study paths</h2></div><p class="section-sub">Simple routes through the library when you are not sure what to study next.</p><div id="pathGrid" class="path-grid"></div></section>
 <section id="athletes"><div class="section-title"><h2>People to study</h2></div><div class="grid" id="athleteGrid"></div></section>
 <section id="systems"><div class="section-title"><h2>Study systems</h2></div><div class="grid" id="systemGrid"></div></section>
-
-<section id="rulesQuiz" style="background:#111827;color:#f9fafb;padding:22px;border-radius:16px;margin:24px 0;font-family:Arial,sans-serif;">
-  <h2 style="margin-top:0;">🥋 IBJJF &amp; ADCC Rules Quiz</h2>
-  <p>Choose a ruleset, answer the questions, and see your score. This is a study aid; check the current official rules for your division and event.</p>
-  <label for="bjj-rules-mode">Ruleset:</label>
-  <select id="bjj-rules-mode" style="padding:10px;margin:8px;background:#fff;color:#111;border-radius:8px;">
-    <option value="ibjjf">IBJJF</option>
-    <option value="adcc">ADCC</option>
-  </select>
-  <div id="bjj-rules-card" style="background:#171717;padding:18px;border-radius:12px;margin-top:12px;">
-    <p id="bjj-rules-progress">Ready when you are.</p>
-    <h3 id="bjj-rules-question">Test your rules knowledge</h3>
-    <div id="bjj-rules-answers" style="display:grid;gap:9px;"></div>
-    <p id="bjj-rules-feedback" aria-live="polite"></p>
-    <p id="bjj-rules-score">Score: 0</p>
-    <button type="button" id="bjj-rules-start" style="padding:10px 16px;border:0;border-radius:8px;background:#7c5cff;color:white;font-weight:bold;cursor:pointer;">Start Quiz</button>
-    <button type="button" id="bjj-rules-next" style="display:none;padding:10px 16px;border:0;border-radius:8px;background:#2bd7a4;color:#111;font-weight:bold;cursor:pointer;">Next Question</button>
-    <button type="button" id="bjj-rules-restart" style="padding:10px 16px;border:1px solid #777;border-radius:8px;background:transparent;color:white;cursor:pointer;">Restart</button>
-  </div>
+<section id="rulesLab" aria-labelledby="rulesLabHeading">
+<div class="eyebrow">Competition IQ</div><div class="section-title"><h2 id="rulesLabHeading">📋 Rules Lab — Test Yourself</h2></div>
+<p>Practice IBJJF and ADCC scoring, penalties and match situations. Answer to reveal the explanation, then see your final score.</p>
+<div class="rules-controls"><select id="rulesFormat" aria-label="Ruleset"><option value="IBJJF">IBJJF</option><option value="ADCC">ADCC</option></select><select id="rulesDifficulty" aria-label="Difficulty"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select><button onclick="rulesStart()">Start / Restart quiz</button></div>
+<div id="rulesQuiz" aria-live="polite"><div class="rules-muted">Choose a ruleset and difficulty, then press Start.</div></div><button class="primary" id="rulesNext" onclick="rulesNext()">Next question →</button>
+<p class="rules-muted">Educational practice only. Official rules can differ by age, division, event and revision. Confirm competition decisions with the current event rulebook.</p>
 </section>
-<style>
-#rulesQuiz .bjj-rules-answer{padding:11px;text-align:left;border:1px solid #555;border-radius:8px;background:#242424;color:white;cursor:pointer}
-#rulesQuiz .bjj-rules-answer:disabled{cursor:default;opacity:.95}
-#rulesQuiz .bjj-rules-answer.correct{border-color:#2bd7a4;background:#123b31}
-#rulesQuiz .bjj-rules-answer.wrong{border-color:#ff647c;background:#421e28}
-</style>
-<script>
-(function(){
-  const bank = {
-    ibjjf: [
-      {q:"How many points is a guard pass worth under standard IBJJF point scoring?",a:["2 points","3 points","4 points"],c:1,e:"A guard pass is worth 3 points."},
-      {q:"How many points is a mount position worth?",a:["2 points","3 points","4 points"],c:2,e:"Mount is worth 4 points."},
-      {q:"How many points is a sweep worth?",a:["1 point","2 points","3 points"],c:1,e:"A sweep is worth 2 points."},
-      {q:"How many points is a takedown that establishes the required control worth?",a:["2 points","3 points","4 points"],c:0,e:"A qualifying takedown is worth 2 points."},
-      {q:"How many points is knee-on-belly worth?",a:["1 point","2 points","4 points"],c:1,e:"Knee-on-belly is worth 2 points."},
-      {q:"What is the usual point value for back control with the required hooks or qualifying control?",a:["2 points","3 points","4 points"],c:2,e:"Back control is worth 4 points when the scoring criteria are met."}
-    ],
-    adcc: [
-      {q:"In a standard ADCC match, are points generally scored during the opening no-points period?",a:["Yes","No"],c:1,e:"The opening period is generally a no-points period, though penalties and submissions still matter."},
-      {q:"What can end an ADCC match immediately?",a:["A submission","A guard pass only","A takedown only"],c:0,e:"A submission can end the match immediately."},
-      {q:"What can a referee issue for passivity?",a:["A passivity warning or penalty","Automatic 10 points","An automatic win"],c:0,e:"Passivity can lead to warnings and penalties under the event rules."},
-      {q:"Are ADCC scoring and IBJJF scoring identical?",a:["Yes, always","No, they use different rules"],c:1,e:"ADCC and IBJJF have different rules and scoring systems."},
-      {q:"Can the rules and scoring period differ by ADCC event or division?",a:["Yes","No, never"],c:0,e:"Always check the specific event and division rules."},
-      {q:"What should you do if you're unsure whether a technique is legal for your division?",a:["Check the current official rules","Assume every technique is legal","Use another division's rules"],c:0,e:"Legality can vary by event, age, experience, and division. Check the current official rules."}
-    ]
-  };
-  const mode=document.getElementById("bjj-rules-mode");
-  const progress=document.getElementById("bjj-rules-progress");
-  const question=document.getElementById("bjj-rules-question");
-  const answers=document.getElementById("bjj-rules-answers");
-  const feedback=document.getElementById("bjj-rules-feedback");
-  const scoreText=document.getElementById("bjj-rules-score");
-  const start=document.getElementById("bjj-rules-start");
-  const next=document.getElementById("bjj-rules-next");
-  const restart=document.getElementById("bjj-rules-restart");
-  let index=0, score=0, active=false, answered=false, finished=false;
-  function render(){
-    const list=bank[mode.value];
-    answered=false; finished=false;
-    progress.textContent="Question "+(index+1)+" of "+list.length;
-    question.textContent=list[index].q;
-    answers.innerHTML=""; feedback.textContent="";
-    scoreText.textContent="Score: "+score;
-    start.style.display="none"; next.style.display="none";
-    list[index].a.forEach((label,i)=>{
-      const b=document.createElement("button");
-      b.type="button"; b.className="bjj-rules-answer"; b.textContent=label;
-      b.addEventListener("click",()=>{
-        if(answered||finished)return;
-        answered=true;
-        const item=list[index];
-        if(i===item.c){score++;b.classList.add("correct");feedback.textContent="Correct! "+item.e;}
-        else{b.classList.add("wrong");answers.children[item.c].classList.add("correct");feedback.textContent="Not quite. "+item.e;}
-        Array.from(answers.children).forEach(x=>x.disabled=true);
-        scoreText.textContent="Score: "+score;
-        next.textContent=index===list.length-1?"See Results":"Next Question";
-        next.style.display="inline-block";
-      });
-      answers.appendChild(b);
-    });
-  }
-  function begin(){index=0;score=0;active=true;render();}
-  start.addEventListener("click",begin);
-  next.addEventListener("click",()=>{
-    if(!answered)return;
-    const list=bank[mode.value];
-    if(index<list.length-1){index++;render();}
-    else{
-      finished=true;progress.textContent="Quiz complete!";
-      question.textContent="You scored "+score+" out of "+list.length;
-      answers.innerHTML="";feedback.textContent=score===list.length?"Perfect score! Great work.":"Nice practice—restart to try again.";
-      scoreText.textContent="Final score: "+score+"/"+list.length;
-      next.style.display="none";start.style.display="inline-block";start.textContent="Play Again";
-    }
-  });
-  restart.addEventListener("click",()=>{start.textContent="Start Quiz";begin();});
-  mode.addEventListener("change",()=>{start.textContent="Start Quiz";index=0;score=0;active=false;answered=false;finished=false;progress.textContent="Ready when you are.";question.textContent="Test your rules knowledge";answers.innerHTML="";feedback.textContent="";scoreText.textContent="Score: 0";start.style.display="inline-block";next.style.display="none";});
-})();
-</script>
-
 <footer>Instructional buttons open BJJ Fanatics searches and match-study buttons open YouTube searches. Saved moves, notes, progress, study plans, search history, and feedback are stored locally on your device. Always follow your academy and event rules when studying submissions and leg locks.</footer>
 </div>
 
@@ -282,6 +193,7 @@ const D=[
 ["K-Guard","Guard","Advanced","Inside guard entry that connects to legs and back takes","Build the knee-to-shoulder connection, then choose outside ashi, waiter, or wrestle-up branches.",["Build the K angle.","Learn outside-ashi entry.","Add underhook/waiter controls.","Study step-over counters."],["Mikey Musumeci K guard match","Lachlan Giles K guard match","Gianni Grippo K guard match"]],
 ["Outside Ashi","Leg Locks","Advanced","Major leg-entanglement hub","Study knee-line, inside position, heel exposure, and transitions before focusing on finishes.",["Win inside position.","Control the knee line.","Drill transitions to 50/50.","Study backstep/clearing reactions."],["Gordon Ryan outside ashi match","Craig Jones outside ashi match","Lachlan Giles outside ashi match"]],
 ["Inside Ashi","Leg Locks","Advanced","Foundational leg-entanglement position","Build hip connection and inside position, then learn safe entries and defensive hand fighting.",["Learn the leg configuration.","Enter from seated guard.","Study knee-line battle.","Connect to outside ashi/50-50."],["Craig Jones inside ashi match","Gordon Ryan inside ashi match","Lachlan Giles inside ashi match"]],
+["Saddle / Inside Sankaku","Leg Locks","Advanced","Powerful leg-entanglement position for controlling both legs and chaining attacks","Focus first on hip control, knee-line position, and safe transitions. Learn how the position connects to heel exposure, back takes, and other leg entanglements before emphasizing finishes.",["Learn the saddle leg configuration.","Control the knee line and far leg.","Drill safe entries from guard, passing, and scrambles.","Study heel concealment, hand fighting, and exits."],["Gordon Ryan saddle BJJ match","Craig Jones saddle inside sankaku match","Lachlan Giles saddle leg lock match"],"No-Gi"],
 ["50/50","Leg Locks","Intermediate","Symmetrical leg position for sweeps and attacks","Study inside position, knee-line control, sweep mechanics, and heel-defense awareness.",["Win inside position.","Learn sweep routes.","Drill technical stand-up.","Study heel concealment."],["Mikey Musumeci 50/50 match","Lachlan Giles 50/50 match","Mica Galvao 50/50 match"]],
 ["Heel Hook","Leg Locks","Advanced","A finishing mechanic inside a larger leg-lock system","Study positional control and defensive mechanics first; never treat the finish as an isolated move.",["Learn safe mechanics.","Understand rotational finishing.","Drill hand fighting.","Learn major escapes."],["Gordon Ryan heel hook match","Craig Jones heel hook match","Mikey Musumeci leg lock match"]],
 ["X-Guard","Guard","Intermediate","Underneath guard for sweeps and transitions","Use strong hooks and distance management to off-balance, stand up, or transition to SLX.",["Build X configuration.","Drill technical stand-up.","Connect X → SLX.","Study backstep counters."],["Lachlan Giles X guard match","Marcelo Garcia X guard match","Mica Galvao X guard match"]],
@@ -422,7 +334,7 @@ const athletes=[
 ];
 const systems=[
 ["Bolo System","DLR → Berimbolo → Crab Ride → Back Control","berimbolo bjj system matches"],
-["Leg-Lock System","K-Guard → Outside Ashi → Inside Ashi → 50/50","bjj leg lock system matches"],
+["Leg-Lock System","K-Guard → Outside Ashi → Saddle / Inside Sankaku → 50/50","bjj leg lock system matches"],
 ["Modern Guard","Shin-to-Shin → SLX → X-Guard → Wrestle-Up","modern bjj guard matches"],
 ["Passing System","HQ → Knee Cut / Leg Drag → Body Lock / Backstep","modern bjj passing matches"]
 ];
@@ -547,7 +459,7 @@ function search(){let q=document.getElementById('q').value.trim();if(q)addSearch
 function resetFilters(){document.getElementById("searchPopup").classList.remove("show");document.getElementById("q").value="";document.getElementById("catFilter").value="";document.getElementById("levelFilter").value="";document.getElementById("styleFilter").value="";render(D)}
 function showSection(id,b){document.getElementById(id).scrollIntoView({behavior:"smooth"});document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
 const detailBox=document.getElementById("detail"),grid=document.getElementById("grid"),count=document.getElementById("count"),empty=document.getElementById("empty");
-document.getElementById("quick").innerHTML=["Berimbolo","Crab Ride","Leg Locks","K-Guard","X-Guard","Passing","Wrestle-Up"].map(q=>`<button class="pill" onclick="document.getElementById('q').value='${q}';search()">${q}</button>`).join("");
+document.getElementById("quick").innerHTML=["Berimbolo","Crab Ride","Saddle","K-Guard","X-Guard","Passing","Wrestle-Up"].map(q=>`<button class="pill" onclick="document.getElementById('q').value='${q}';search()">${q}</button>`).join("");
 document.getElementById("athleteGrid").innerHTML=athletes.map(a=>`<article class="card"><div class="type">Athlete</div><h3>${a[0]}</h3><p>${a[1]}</p><a class="watch" style="display:block;text-decoration:none" target="_blank" href="${Y(a[2])}">▶ Study matches</a></article>`).join("");
 document.getElementById("systemGrid").innerHTML=systems.map(s=>`<article class="card"><div class="type">System</div><h3>${s[0]}</h3><p>${s[1]}</p><a class="watch" style="display:block;text-decoration:none" target="_blank" href="${Y(s[2])}">▶ Find matches</a></article>`).join("");
 const cats=[...new Set(D.map(x=>x[1]))].sort();document.getElementById("catFilter").insertAdjacentHTML("beforeend",cats.map(c=>`<option>${c}</option>`).join(""));
@@ -580,7 +492,31 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-
-
-
+<script>
+const RULES_BANK = {
+ IBJJF: [
+ {d:'beginner',q:'How many points is a successful guard pass worth?',a:['2','3','4','5'],c:1,e:'IBJJF guard passing scores 3 points when its scoring requirements are met.'},
+ {d:'beginner',q:'How many points does mount earn?',a:['2','3','4','5'],c:2,e:'Mount earns 4 points when the position meets the scoring requirements.'},
+ {d:'beginner',q:'How many points is a qualifying sweep worth?',a:['1','2','3','4'],c:1,e:'A sweep from guard to a qualifying top position earns 2 points.'},
+ {d:'intermediate',q:'How many points is knee-on-belly worth?',a:['1','2','3','4'],c:1,e:'The IBJJF awards 2 points for qualifying knee-on-belly control.'},
+ {d:'intermediate',q:'How many points is a qualifying takedown worth?',a:['1','2','3','4'],c:1,e:'A takedown scores 2 points when control requirements are satisfied.'},
+ {d:'advanced',q:'Can a competitor score points for passing directly into mount?',a:['No, only mount points','Yes, passing and mount can both score','Only if the referee warns the bottom player','Only in no-gi'],c:1,e:'Separate scoring actions can receive points if the relevant stabilization and transition criteria are met.'},
+ {d:'advanced',q:'How many points is back control with hooks worth?',a:['2','3','4','5'],c:2,e:'Qualifying back control scores 4 points.'}
+ ],
+ ADCC: [
+ {d:'beginner',q:'In the standard ADCC points period, how many points is a guard pass?',a:['2','3','4','5'],c:1,e:'A qualifying guard pass earns 3 points.'},
+ {d:'beginner',q:'How many points is mount worth in ADCC?',a:['2','3','4','5'],c:0,e:'Mount earns 2 points in the standard ADCC scoring system.'},
+ {d:'beginner',q:'Does standard ADCC regulation begin with positive points immediately?',a:['Yes','No, there is an initial no-positive-points period','Only for gi matches','Only in finals'],c:1,e:'Standard ADCC regulation has an initial period without positive points. Its duration depends on the match format.'},
+ {d:'intermediate',q:'How many points does a standard ADCC sweep into top guard earn?',a:['1','2','3','4'],c:1,e:'A qualifying sweep that finishes on top in guard earns 2 points.'},
+ {d:'intermediate',q:'How many points can a clean sweep that ends beyond the guard earn?',a:['1','2','3','4'],c:3,e:'A clean sweep that ends past the guard can earn 4 points.'},
+ {d:'advanced',q:'In standard ADCC rules, can pulling guard voluntarily lead to a negative point?',a:['Yes, depending on the match phase','Never','Only after a submission','Only in a gi'],c:0,e:'Guard pulling can result in a negative point in applicable ADCC match phases. Consult the event-specific rules.'},
+ {d:'advanced',q:'In standard ADCC rules, how many points is taking the back with hooks?',a:['2','3','4','5'],c:2,e:'Back mount with hooks is worth 3 points under standard ADCC scoring.'}
+ ]
+};
+let rulesQuestions=[],rulesIndex=0,rulesScore=0,rulesAnswered=false;
+function rulesStart(){const format=document.getElementById('rulesFormat').value,d=document.getElementById('rulesDifficulty').value;const levels={beginner:['beginner'],intermediate:['beginner','intermediate'],advanced:['beginner','intermediate','advanced']};rulesQuestions=RULES_BANK[format].filter(x=>levels[d].includes(x.d));rulesQuestions=[...rulesQuestions].sort(()=>Math.random()-.5);rulesIndex=0;rulesScore=0;rulesRender()}
+function rulesRender(){const next=document.getElementById('rulesNext'),root=document.getElementById('rulesQuiz');next.style.display='none';rulesAnswered=false;if(rulesIndex>=rulesQuestions.length){root.innerHTML='<h3>Quiz complete 🏆</h3><p style="font-size:30px;font-weight:900">'+rulesScore+' / '+rulesQuestions.length+'</p><p>'+Math.round(100*rulesScore/rulesQuestions.length)+'% correct</p><button class="primary" onclick="rulesStart()">Try again ↻</button>';return}const item=rulesQuestions[rulesIndex];root.replaceChildren();const meta=document.createElement('p');meta.className='rules-muted';meta.textContent='Question '+(rulesIndex+1)+' of '+rulesQuestions.length+' · Score '+rulesScore;const question=document.createElement('div');question.id='rulesQuestion';question.textContent=item.q;root.append(meta,question);item.a.forEach((answer,i)=>{const btn=document.createElement('button');btn.className='rules-option';btn.textContent=String.fromCharCode(65+i)+'. '+answer;btn.onclick=()=>rulesAnswer(i);root.append(btn)})}
+function rulesAnswer(chosen){if(rulesAnswered)return;rulesAnswered=true;const item=rulesQuestions[rulesIndex];if(chosen===item.c)rulesScore++;document.querySelectorAll('#rulesQuiz .rules-option').forEach((btn,i)=>{btn.disabled=true;if(i===item.c)btn.classList.add('correct');else if(i===chosen)btn.classList.add('wrong')});const exp=document.createElement('div');exp.className='rules-explain';exp.textContent=(chosen===item.c?'✅ Correct! ':'❌ Incorrect. ')+item.e;document.getElementById('rulesQuiz').append(exp);const next=document.getElementById('rulesNext');next.style.display='inline-block';next.textContent=rulesIndex+1===rulesQuestions.length?'See results →':'Next question →'}
+function rulesNext(){rulesIndex++;rulesRender()}
+</script>
 </body></html>
